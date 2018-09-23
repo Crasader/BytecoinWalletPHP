@@ -1,6 +1,10 @@
 {
 	"name": "Bytecoin class PHP",
-	"description": "API with Bytecoin",
+	"description": "PHP library for walletd JSON-RPC interface",
+	"keywords": ["bytecoin", "php", "wallet"],
+	"homepage": "https://github.com/netwarp/BytecoinWalletPHP",
+	"type": "library",
+	"licence": "MIT",
 	"require": {
 		"php": ">=7.0"
 	}
