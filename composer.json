@@ -1,0 +1,7 @@
+{
+	"name": "Bytecoin class PHP",
+	"description": "API with Bytecoin",
+	"require": {
+		"php": ">=7.0"
+	}
+}
