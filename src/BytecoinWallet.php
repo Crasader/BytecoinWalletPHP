@@ -29,7 +29,9 @@ class BytecoinWallet {
 	*/
 	public function makeRequest(string $method, $params = []) : string {
 
-		$url = "http://toto:toto@{$this->ip}:{$this->port}/json_rpc";
+		# url = "http://user:password@127.0.0.1:8070/json_rpc"
+
+		$url = "http://{$this->user}:{$this->password}@{$this->ip}:{$this->port}/json_rpc";
 
 		$data = [
 			'jsonrpc' => '2.0',
@@ -52,8 +54,12 @@ class BytecoinWallet {
 		if ($result === FALSE) { 
 
 		}
-
-		return $result;
+		else {
+			$result = json_decode($result);
+			$result->http_code = 200;
+			$result = json_encode($result);
+			return $result;
+		}
 	}
 
 	/*************************************************************
@@ -61,16 +67,17 @@ class BytecoinWallet {
 	* Address and key managements
 	*
 	**************************************************************/
-	private function createAdrdess() {
 
+    private function createAddresses() {
+        return $this->makeRequest('create_addresses');
 	}
 
 	public function getAddresses() {
 		return $this->makeRequest('get_addresses');
 	}
 
-	private function getViewPair() {
-
+	public function getViewKeyPair() {
+		return $this->makeRequest('get_view_key_pair');
 	}
 
 	/*
@@ -88,23 +95,28 @@ class BytecoinWallet {
 	}
 
 	public function getUnspents() {
-
+        return $this->makeRequest('get_unspents');
 	}
 
 	public function getTransfers() {
-
+        return $this->makeRequest('get_transfers');
 	}
 
-	public function createSendProof() {
+	public function createSendProof(array $addresses, string $transaction_hash, string $message) {
 
+	    return $this->makeRequest('create_send_proof', [
+	        'addresses' => $addresses,
+            'transaction_hash' => $transaction_hash,
+            'message' => $message
+        ]);
 	}
 
-	public function checkSendProof() {
-
+	public function checkSendProof(string $address, float $amount, string $message, string $proof, string $transaction_hash) {
+        return $this->makeRequest('check_send_proof', compact('address', 'amount', 'message', 'proof', 'transaction_hash'));
 	}
 
 	public function getTransations() {
-
+        return $this->makeRequest('get_transactions');
 	}
 
 	/*
@@ -113,15 +125,11 @@ class BytecoinWallet {
 	*
 	*/
 
-	public function createTransaction() {
-
+	public function createTransaction($transaction, array $spend_addresses, bool $any_spend_address = false, string $change_address) {
+		return $this->makeRequest('create_transaction', []);
 	}
 
 	public function sendTransaction() {
-		return 'toto';
+
 	}
 }
-
-$wallet = new BytecoinWallet('127.0.0.1', '8070', 'toto', 'toto');
-$result = $wallet->getAddresses();
-var_dump($result);
